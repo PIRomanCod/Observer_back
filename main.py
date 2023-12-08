@@ -18,8 +18,11 @@ from src.routes import users, auth, stocks, products, company, purchase, transac
 
 app = FastAPI()
 
-origins = ["*",
-    "http://localhost:8000", "https://strict-ruthann-piromancod.koyeb.app/"
+origins = [
+            "*",
+            "http://localhost:8000",
+            "188.163.99.103",
+           "https://strict-ruthann-piromancod.koyeb.app"
 ]
 
 app.add_middleware(
@@ -40,7 +43,7 @@ async def validation_exception_handler(request, exc):
     )
 
 
-@app.middleware('http')
+@app.middleware('https')
 async def custom_middleware(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
@@ -49,7 +52,7 @@ async def custom_middleware(request: Request, call_next):
     return response
 
 
-@app.middleware("http")
+@app.middleware("https")
 async def errors_handling(request: Request, call_next):
     """
     The errors_handling function is a middleware that catches any exception raised by the application.
