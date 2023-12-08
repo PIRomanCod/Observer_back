@@ -19,7 +19,7 @@ from src.routes import users, auth, stocks, products, company, purchase, transac
 app = FastAPI()
 
 origins = ["*",
-    "http://localhost:8000"
+    "http://localhost:8000", "https://strict-ruthann-piromancod.koyeb.app/"
 ]
 
 app.add_middleware(
