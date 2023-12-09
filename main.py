@@ -21,7 +21,6 @@ app = FastAPI()
 origins = [
             "*",
             "http://localhost:8000",
-            "188.163.99.103",
            "https://strict-ruthann-piromancod.koyeb.app"
 ]
 
@@ -116,7 +115,6 @@ app.include_router(purchase.router, prefix='/api')
 app.include_router(transactions.router, prefix='/api')
 app.include_router(exch_rate.router, prefix='/api')
 
-# app.include_router(chathistory.router, prefix='/api')
 
 @app.on_event("startup")
 async def startup():
@@ -135,7 +133,7 @@ async def startup():
                           decode_responses=True,
                           encoding="utf-8")
     await FastAPILimiter.init(r)
-#
+
 
 if __name__ == '__main__':
     uvicorn.run('main:app', reload=True)
