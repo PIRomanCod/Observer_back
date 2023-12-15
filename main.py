@@ -21,7 +21,8 @@ app = FastAPI()
 origins = [
             "*",
             "http://localhost:8000",
-           "https://strict-ruthann-piromancod.koyeb.app"
+            "https://strict-ruthann-piromancod.koyeb.app",
+            "https://observerfrontend.streamlit.app"
 ]
 
 app.add_middleware(
