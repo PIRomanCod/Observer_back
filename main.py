@@ -14,7 +14,7 @@ from starlette.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 
 from src.database.db import get_db
-from src.routes import users, auth, stocks, products, company, purchase, transactions, exch_rate
+from src.routes import users, auth, stocks, products, company, purchase, transactions, exch_rate, accounts, movements
 
 app = FastAPI()
 
@@ -115,6 +115,8 @@ app.include_router(company.router, prefix='/api')
 app.include_router(purchase.router, prefix='/api')
 app.include_router(transactions.router, prefix='/api')
 app.include_router(exch_rate.router, prefix='/api')
+app.include_router(movements.router, prefix='/api')
+app.include_router(accounts.router, prefix='/api')
 
 
 @app.on_event("startup")

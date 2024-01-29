@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, EmailStr, condecimal
 from decimal import Decimal
-from src.database.models import UserRole, Company, Contact, User, DailyStockReports, Products, Purchase
+from src.database.models import UserRole, Company, Contact, User, DailyStockReports, Products, Purchase, AccountName, Movements
 
 
 class UserModel(BaseModel):
@@ -320,6 +320,74 @@ class ExchRateCreate(BaseModel):
 
 class ExchRateResponse(ExchRateCreate):
     id: int
+
+    class Config:
+        orm_mode = True
+
+
+class AccountBase(BaseModel):
+    name: str
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class AccountCreateUpdate(AccountBase):
+    pass
+
+
+class AccountResponse(AccountCreateUpdate):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+class AccountsListResponse(BaseModel):
+    items: List[AccountResponse]
+
+    class Config:
+        orm_mode = True
+
+class MovementsBase(BaseModel):
+    date: date
+    company_id: int
+    description: Optional[str] = None
+    accounting_type: str
+    operation_type: OperationType
+    currency: CurrencyType
+    sum: float
+    payment_way: AccountBase
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
+class MovementsCreateUpdate(MovementsBase):
+    pass
+
+
+class MovementsResponse(MovementsBase):
+    id: int
+    date: date
+    company_id: int
+    description: Optional[str] = None
+    accounting_type: str
+    operation_type: OperationType
+    currency: CurrencyType
+    sum: float
+    payment_way: AccountBase
+    user_id: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class MovementsListResponse(BaseModel):
+    items: List[MovementsResponse]
 
     class Config:
         orm_mode = True

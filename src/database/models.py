@@ -221,6 +221,34 @@ class ExchRate(Base):
     user = relationship('User', backref='exch_rates')
 
 
+class AccountName(Base):
+    __tablename__ = "accounts"
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
+    user = relationship('User', backref='accounts')
+
+
+class Movements(Base):
+    __tablename__ = "movements"
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime)
+    company_id = Column('company_id', ForeignKey('companies.id', ondelete='SET NULL'), nullable=True)
+    company = relationship('Company', backref='movements')
+    description = Column(String(255), default="payment", nullable=True)
+    account_type = Column(String(50), nullable=False)
+    operation_type = Column(String(50), nullable=False)
+    currency = Column(String(50), nullable=False)
+    sum = Column(Float, nullable=False)
+    payment_way = Column('payment_way', ForeignKey('accounts.id', ondelete='SET NULL'), nullable=True)
+    account = relationship('AccountName', backref='movements')
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    user_id = Column('user_id', ForeignKey('users.id', ondelete='SET NULL'), nullable=True)
+    user = relationship('User', backref='movements')
+
 # @event.listens_for(Company, 'before_insert')
 # def updated_favorite(mapper, conn, target):
 #
