@@ -7,7 +7,7 @@ from src.conf import messages
 from src.database.db import get_db
 from src.database.models import User, UserRole, Movements
 from src.repository import movements as repository_movements
-from src.schemas import MovementsBase, MovementsCreateUpdate, MovementsResponse, MovementsListResponse
+from src.schemas import MovementsBase, MovementsCreateUpdate, MovementsResponse, MovementsListResponse, MovementsFilter
 from src.services.auth.auth import auth_service
 from src.services.auth.role import RoleAccess
 
@@ -122,4 +122,33 @@ async def read_movements_by_period(
     return {"items": db_movements}
 
 
+@router.get("/by_currency/{currency}", response_model=MovementsListResponse, status_code=status.HTTP_200_OK,
+            dependencies=[Depends(allowed_get_movements), Depends(RateLimiter(times=10, seconds=60))])
+async def read_movements_by_currency(
+        currency: str,
+        offset: int = 0,
+        limit: int = 2000,
+        current_user: User = Depends(auth_service.get_current_user),
+        db: Session = Depends(get_db)
+):
+    db_movements = await repository_movements.get_movements_by_currency(currency, limit, offset, current_user, db)
+    return {"items": db_movements}
 
+
+@router.get("/milti_filter/{filter_params}", response_model=MovementsListResponse, status_code=status.HTTP_200_OK,
+            dependencies=[Depends(allowed_get_movements), Depends(RateLimiter(times=10, seconds=60))])
+async def read_movements_by_milti_filter(
+        filter_params: MovementsFilter = Depends(),
+        offset: int = 0,
+        limit: int = 2000,
+        current_user: User = Depends(auth_service.get_current_user),
+        db: Session = Depends(get_db)
+):
+    # Створіть словник параметрів для передачі в функцію repository_movements.get_filtered_movements
+    query_params = {k: v for k, v in filter_params.dict().items() if v is not None}
+    print("WTFFF", query_params)
+
+    # Отримайте вибірку з бази даних за заданими параметрами
+    db_movements = await repository_movements.get_filtered_movements(query_params, limit, offset, current_user, db)
+
+    return {"items": db_movements}

@@ -23,7 +23,7 @@ async def create_accounts(accounts_data: AccountCreateUpdate,
                                    current_user: User = Depends(auth_service.get_current_user),
                                    db: Session = Depends(get_db)
                                    ):
-    return await repository_accounts.create_accounts(accounts_data, current_user, db)
+    return await repository_accounts.create_account(accounts_data, current_user, db)
 
 
 @router.get("/{movements_id}", response_model=AccountResponse, status_code=status.HTTP_200_OK,

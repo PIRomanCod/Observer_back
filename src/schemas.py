@@ -327,14 +327,13 @@ class ExchRateResponse(ExchRateCreate):
 
 class AccountBase(BaseModel):
     name: str
-    user_id: int
 
     class Config:
         orm_mode = True
 
 
 class AccountCreateUpdate(AccountBase):
-    pass
+    user_id: int
 
 
 class AccountResponse(AccountCreateUpdate):
@@ -356,11 +355,11 @@ class MovementsBase(BaseModel):
     date: date
     company_id: int
     description: Optional[str] = None
-    accounting_type: str
+    account_type: str
     operation_type: OperationType
     currency: CurrencyType
     sum: float
-    payment_way: AccountBase
+    payment_way: int# AccountBase
     user_id: int
 
     class Config:
@@ -371,19 +370,22 @@ class MovementsCreateUpdate(MovementsBase):
     pass
 
 
-class MovementsResponse(MovementsBase):
+class MovementsResponse(BaseModel):
     id: int
     date: date
     company_id: int
     description: Optional[str] = None
-    accounting_type: str
+    account_type: str
     operation_type: OperationType
     currency: CurrencyType
     sum: float
-    payment_way: AccountBase
+    payment_way: int #AccountBase
     user_id: int
     created_at: datetime
     updated_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class MovementsListResponse(BaseModel):
@@ -391,3 +393,18 @@ class MovementsListResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class MovementsFilter(BaseModel):
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    company_id: Optional[int] = None
+    currency: Optional[str] = None
+    payment_way: Optional[int] = None
+    account_type: Optional[str] = None
+    operation_type: Optional[OperationType] = None
+
+    class Config:
+        orm_mode = True
+
+
